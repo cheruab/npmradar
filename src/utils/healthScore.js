@@ -1,44 +1,38 @@
-import { HEALTH_THRESHOLDS } from './constants'
-import { parseISO, differenceInMonths } from 'date-fns'
+import { differenceInMonths, parseISO } from 'date-fns'
+import { HEALTH } from './constants'
 
-export function calculateHealthScore(data) {
-  const { npm, npms, github, bundle } = data
+export const calculateHealth = ({ npm, npms, github, bundle }) => {
   let score = 100
   const flags = []
 
-  // ── Maintenance ──────────────────────────────
   const lastPublish = npm?.time?.modified
   if (lastPublish) {
-    const monthsOld = differenceInMonths(new Date(), parseISO(lastPublish))
-    if (monthsOld > HEALTH_THRESHOLDS.STALE_MONTHS) {
+    const age = differenceInMonths(new Date(), parseISO(lastPublish))
+    if (age > HEALTH.STALE_MONTHS) {
       score -= 20
-      flags.push(`Not updated in ${monthsOld} months`)
+      flags.push(`Last published ${age} months ago`)
     }
   }
 
-  // ── Issues ────────────────────────────────────
-  if (github?.open_issues_count > HEALTH_THRESHOLDS.HIGH_ISSUES) {
+  if (github?.open_issues_count > HEALTH.HIGH_ISSUES) {
     score -= 15
     flags.push(`${github.open_issues_count} open issues`)
   }
 
-  // ── Bundle size ───────────────────────────────
-  if (bundle?.size > HEALTH_THRESHOLDS.LARGE_BUNDLE_KB * 1024) {
+  if (bundle?.size > HEALTH.LARGE_BUNDLE_KB * 1024) {
     score -= 15
-    flags.push(`Large bundle: ${(bundle.size / 1024).toFixed(0)}kB`)
+    flags.push(`Bundle size ${(bundle.size / 1024).toFixed(0)} kB`)
   }
 
-  // ── npms.io quality score ─────────────────────
-  const quality = npms?.score?.detail?.quality ?? 0
+  const quality = npms?.score?.detail?.quality ?? 1
   if (quality < 0.5) {
     score -= 20
-    flags.push('Low quality score on npms.io')
+    flags.push('Low quality score')
   }
 
-  // ── No GitHub repo ────────────────────────────
   if (!github) {
     score -= 10
-    flags.push('No GitHub repository linked')
+    flags.push('No linked GitHub repo')
   }
 
   score = Math.max(0, Math.min(100, score))
@@ -46,7 +40,7 @@ export function calculateHealthScore(data) {
   return {
     score,
     flags,
-    label: score >= 80 ? 'Healthy' : score >= 50 ? 'Aging' : 'Risky',
-    color: score >= 80 ? 'green' : score >= 50 ? 'yellow' : 'red',
+    label: score >= 80 ? 'Healthy' : score >= 50 ? 'Aging'   : 'Risky',
+    color: score >= 80 ? 'green'   : score >= 50 ? 'yellow'  : 'red',
   }
 }

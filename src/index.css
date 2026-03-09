@@ -1,1 +1,56 @@
 @import "tailwindcss";
+@import "geist/dist/font.css";
+
+@theme {
+  --font-family-sans: 'Geist', system-ui, sans-serif;
+  --font-family-mono: 'Geist Mono', 'Fira Code', monospace;
+
+  --color-bg:          #000000;
+  --color-bg-1:        #0a0a0a;
+  --color-bg-2:        #111111;
+  --color-bg-3:        #1a1a1a;
+
+  --color-border:      #222222;
+  --color-border-2:    #2a2a2a;
+
+  --color-txt:         #ededed;
+  --color-txt-2:       #888888;
+  --color-txt-3:       #555555;
+
+  --color-accent:      #0070f3;
+  --color-accent-h:    #0060d3;
+
+  --color-success:     #22c55e;
+  --color-warning:     #eab308;
+  --color-danger:      #ef4444;
+
+  --radius:            6px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-txt);
+  font-family: var(--font-family-sans);
+  line-height: 1.5;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+::-webkit-scrollbar       { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border-2); border-radius: 99px; }
