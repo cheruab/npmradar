@@ -14,7 +14,12 @@ const ScoreRing = ({ score, color }) => {
 
   return (
     <svg width="72" height="72" viewBox="0 0 72 72">
-      <circle cx="36" cy="36" r={r} fill="none" stroke="#1a1a1a" strokeWidth="4" />
+      <circle
+        cx="36" cy="36" r={r}
+        fill="none"
+        stroke="#1a1a1a"
+        strokeWidth="4"
+      />
       <circle
         cx="36" cy="36" r={r}
         fill="none"
@@ -26,7 +31,14 @@ const ScoreRing = ({ score, color }) => {
         transform="rotate(-90 36 36)"
         style={{ transition: 'stroke-dashoffset 0.6s ease' }}
       />
-      <text x="36" y="41" textAnchor="middle" fill="#ededed" fontSize="14" fontWeight="600" fontFamily="inherit">
+      <text
+        x="36" y="41"
+        textAnchor="middle"
+        fill="#ededed"
+        fontSize="14"
+        fontWeight="600"
+        fontFamily="inherit"
+      >
         {score}
       </text>
     </svg>

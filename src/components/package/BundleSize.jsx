@@ -2,17 +2,19 @@ import { formatBytes } from '../../utils/formatters'
 import Card from '../ui/Card'
 
 export default function BundleSize({ bundle }) {
-  if (!bundle) return (
-    <Card>
-      <p className="text-[12px] text-[#555] uppercase tracking-widest font-mono mb-3">
-        Bundle Size
-      </p>
-      <p className="text-[#555] text-[13px]">Not available for this package.</p>
-    </Card>
-  )
+  if (!bundle) {
+    return (
+      <Card>
+        <p className="text-[12px] text-[#555] uppercase tracking-widest font-mono mb-3">
+          Bundle Size
+        </p>
+        <p className="text-[#555] text-[13px]">Not available for this package.</p>
+      </Card>
+    )
+  }
 
-  const sizeKb = (bundle.size / 1024).toFixed(1)
-  const gzipKb = (bundle.gzip / 1024).toFixed(1)
+  const sizeKb  = (bundle.size / 1024).toFixed(1)
+  const gzipKb  = (bundle.gzip / 1024).toFixed(1)
   const warning = bundle.size > 500 * 1024
 
   return (
@@ -26,9 +28,7 @@ export default function BundleSize({ bundle }) {
           {sizeKb}
         </span>
         <span className="text-[#555] text-[13px] mb-1 font-mono">kB</span>
-        <span className="text-[#555] text-[13px] mb-1 ml-2 font-mono">
-          minified
-        </span>
+        <span className="text-[#555] text-[13px] mb-1 ml-2 font-mono">minified</span>
       </div>
 
       <p className="text-[#888] text-[12px] font-mono">

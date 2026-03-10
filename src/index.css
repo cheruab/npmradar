@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "geist/dist/font.css";
 
 @theme {
   --font-family-sans: 'Geist', system-ui, sans-serif;

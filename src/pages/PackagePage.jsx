@@ -1,21 +1,31 @@
-import { useEffect }         from 'react'
+import { useEffect } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
-import { usePackage }        from '../hooks/usePackage'
-import SearchBar             from '../components/package/SearchBar'
-import PackageHeader         from '../components/package/PackageHeader'
-import DownloadChart         from '../components/package/DownloadChart'
-import BundleSize            from '../components/package/BundleSize'
-import GithubStats           from '../components/package/GithubStats'
-import HealthScore           from '../components/package/HealthScore'
-import Skeleton              from '../components/ui/Skeleton'
-import ErrorMessage          from '../components/ui/ErrorMessage'
+import { usePackage }     from '../hooks/usePackage'
+import SearchBar          from '../components/package/SearchBar'
+import PackageHeader      from '../components/package/PackageHeader'
+import DownloadChart      from '../components/package/DownloadChart'
+import BundleSize         from '../components/package/BundleSize'
+import GithubStats        from '../components/package/GithubStats'
+import HealthScore        from '../components/package/HealthScore'
+import Skeleton           from '../components/ui/Skeleton'
+import ErrorMessage       from '../components/ui/ErrorMessage'
+
+const col = {
+  bg:      '#000',
+  surface: '#0a0a0a',
+  border:  '#1a1a1a',
+  txt:     '#ededed',
+  muted:   '#888',
+  dim:     '#555',
+  accent:  '#0070f3',
+}
 
 function LoadingState() {
   return (
-    <div className="flex flex-col gap-4">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       <Skeleton className="h-6 w-48" />
-      <Skeleton className="h-4 w-96" />
-      <div className="grid grid-cols-2 gap-3 mt-4">
+      <Skeleton className="h-4 w-80" />
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: '8px' }}>
         <Skeleton className="h-40" />
         <Skeleton className="h-40" />
         <Skeleton className="h-52" />
@@ -26,8 +36,8 @@ function LoadingState() {
 }
 
 export default function PackagePage() {
-  const { name }             = useParams()
-  const navigate             = useNavigate()
+  const { name }    = useParams()
+  const navigate    = useNavigate()
   const { data, loading, error, lookup } = usePackage()
 
   useEffect(() => {
@@ -35,29 +45,43 @@ export default function PackagePage() {
   }, [name])
 
   return (
-    <div className="min-h-screen bg-[#000] flex flex-col">
+    <div style={{ minHeight: '100vh', background: col.bg, display: 'flex', flexDirection: 'column' }}>
 
       {/* Nav */}
-      <header className="h-14 border-b border-[#111] flex items-center justify-between px-6 gap-4">
-        <Link to="/" className="text-[#ededed] text-[14px] font-semibold tracking-tight shrink-0">
-          npm<span className="text-[#0070f3]">radar</span>
+      <header style={{
+        height: '56px',
+        borderBottom: `1px solid #111`,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '0 24px',
+        gap: '16px',
+      }}>
+        <Link to="/" style={{ color: col.txt, fontSize: '14px', fontWeight: 600, textDecoration: 'none', flexShrink: 0, letterSpacing: '-0.01em' }}>
+          npm<span style={{ color: col.accent }}>radar</span>
         </Link>
-        <div className="w-full max-w-sm">
-          <SearchBar
-            onSearch={(n) => navigate(`/package/${n}`)}
-            loading={loading}
-          />
+
+        <div style={{ width: '100%', maxWidth: '320px' }}>
+          <SearchBar onSearch={(n) => navigate(`/package/${n}`)} loading={loading} />
         </div>
+
         {data && (
           <Link
             to={`/compare/${name}/react`}
-            className="
-              shrink-0 h-8 px-3
-              border border-[#222] hover:border-[#444]
-              text-[#888] hover:text-[#ededed]
-              text-[12px] font-mono rounded-[6px]
-              transition-colors whitespace-nowrap
-            "
+            style={{
+              flexShrink: 0,
+              height: '32px',
+              padding: '0 12px',
+              border: '1px solid #222',
+              color: col.muted,
+              fontSize: '12px',
+              fontFamily: 'monospace',
+              borderRadius: '6px',
+              display: 'flex',
+              alignItems: 'center',
+              textDecoration: 'none',
+              whiteSpace: 'nowrap',
+            }}
           >
             + Compare
           </Link>
@@ -65,34 +89,41 @@ export default function PackagePage() {
       </header>
 
       {/* Content */}
-      <main className="flex-1 w-full max-w-4xl mx-auto px-6 py-8">
+      <main style={{ flex: 1, width: '100%', maxWidth: '860px', margin: '0 auto', padding: '32px 24px' }}>
 
         {loading && <LoadingState />}
         {error   && <ErrorMessage message={error} />}
 
         {data && !loading && (
-          <div className="flex flex-col gap-6">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
 
             <PackageHeader npm={data.npm} />
 
-            <div className="w-full h-px bg-[#111]" />
+            <div style={{ width: '100%', height: '1px', background: '#111' }} />
 
-            {/* Stats grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
               <HealthScore  health={data.health} npms={data.npms} />
               <BundleSize   bundle={data.bundle} />
-              <div className="md:col-span-2">
+              <div style={{ gridColumn: '1 / -1' }}>
                 <DownloadChart downloads={data.downloads} />
               </div>
-              <div className="md:col-span-2">
+              <div style={{ gridColumn: '1 / -1' }}>
                 <GithubStats github={data.github} />
               </div>
             </div>
 
             {/* Install snippet */}
-            <div className="flex items-center gap-3 px-4 py-3 bg-[#0a0a0a] border border-[#222] rounded-[6px]">
-              <span className="text-[#555] text-[12px] font-mono">$</span>
-              <code className="text-[#ededed] text-[13px] font-mono">
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              padding: '12px 16px',
+              background: col.surface,
+              border: '1px solid #1a1a1a',
+              borderRadius: '6px',
+            }}>
+              <span style={{ color: col.dim, fontSize: '12px', fontFamily: 'monospace' }}>$</span>
+              <code style={{ color: col.txt, fontSize: '13px', fontFamily: 'monospace' }}>
                 npm install {data.npm.name}
               </code>
             </div>

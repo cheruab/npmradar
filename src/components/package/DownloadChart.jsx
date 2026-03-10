@@ -1,10 +1,6 @@
 import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
+  AreaChart, Area, XAxis, YAxis,
+  Tooltip, ResponsiveContainer,
 } from 'recharts'
 import { aggregateWeekly, formatDownloads } from '../../utils/formatters'
 import Card from '../ui/Card'

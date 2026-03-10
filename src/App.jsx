@@ -7,9 +7,9 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/"                        element={<Home />} />
-        <Route path="/package/:name"           element={<PackagePage />} />
-        <Route path="/compare/:name1/:name2"   element={<ComparePage />} />
+        <Route path="/"                      element={<Home />} />
+        <Route path="/package/:name"         element={<PackagePage />} />
+        <Route path="/compare/:name1/:name2" element={<ComparePage />} />
       </Routes>
     </BrowserRouter>
   )

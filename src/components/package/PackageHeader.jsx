@@ -1,70 +1,43 @@
-import {
-  AreaChart, Area, XAxis, YAxis,
-  Tooltip, ResponsiveContainer,
-} from 'recharts'
-import { aggregateWeekly, formatDownloads } from '../../utils/formatters'
-import Card from '../ui/Card'
+import { timeAgo } from '../../utils/formatters'
+import Badge from '../ui/Badge'
 
-const CustomTooltip = ({ active, payload, label }) => {
-  if (!active || !payload?.length) return null
-  return (
-    <div className="bg-[#111] border border-[#222] rounded-[6px] px-3 py-2">
-      <p className="text-[#888] text-[11px] font-mono mb-0.5">{label}</p>
-      <p className="text-[#ededed] text-[13px] font-mono font-medium">
-        {formatDownloads(payload[0].value)}
-      </p>
-    </div>
-  )
-}
-
-export default function DownloadChart({ downloads }) {
-  const data = aggregateWeekly(downloads?.downloads ?? [])
-  const total = downloads?.downloads?.reduce((s, d) => s + d.downloads, 0) ?? 0
+export default function PackageHeader({ npm }) {
+  const latest  = npm['dist-tags']?.latest
+  const updated = npm.time?.modified
+  const license = npm.versions?.[latest]?.license || npm.license || 'Unknown'
 
   return (
-    <Card>
-      <div className="flex items-center justify-between mb-4">
-        <p className="text-[12px] text-[#555] uppercase tracking-widest font-mono">
-          Downloads
-        </p>
-        <span className="text-[#ededed] text-[13px] font-mono font-medium">
-          {formatDownloads(total)}
-          <span className="text-[#555] ml-1">/ month</span>
-        </span>
+    <div className="flex flex-col gap-3">
+      <div className="flex items-center gap-3 flex-wrap">
+        <h1 className="text-[22px] font-semibold text-[#ededed] tracking-tight">
+          {npm.name}
+        </h1>
+        <Badge label={`v${latest}`} variant="blue" />
+        <Badge label={license}      variant="gray" />
       </div>
 
-      <ResponsiveContainer width="100%" height={120}>
-        <AreaChart data={data} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
-          <defs>
-            <linearGradient id="dlGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%"  stopColor="#0070f3" stopOpacity={0.15} />
-              <stop offset="95%" stopColor="#0070f3" stopOpacity={0} />
-            </linearGradient>
-          </defs>
-          <XAxis
-            dataKey="week"
-            tick={{ fill: '#555', fontSize: 11, fontFamily: 'inherit' }}
-            axisLine={false}
-            tickLine={false}
-          />
-          <YAxis
-            tickFormatter={formatDownloads}
-            tick={{ fill: '#555', fontSize: 11, fontFamily: 'inherit' }}
-            axisLine={false}
-            tickLine={false}
-          />
-          <Tooltip content={<CustomTooltip />} />
-          <Area
-            type="monotone"
-            dataKey="downloads"
-            stroke="#0070f3"
-            strokeWidth={1.5}
-            fill="url(#dlGradient)"
-            dot={false}
-            activeDot={{ r: 3, fill: '#0070f3', strokeWidth: 0 }}
-          />
-        </AreaChart>
-      </ResponsiveContainer>
-    </Card>
+      <p className="text-[#888] text-[13px] leading-relaxed max-w-2xl">
+        {npm.description || 'No description provided.'}
+      </p>
+
+      <div className="flex items-center gap-4 text-[12px] text-[#555] font-mono flex-wrap">
+        {npm.author?.name && (
+          <span>by <span className="text-[#888]">{npm.author.name}</span></span>
+        )}
+        {updated && (
+          <span>updated <span className="text-[#888]">{timeAgo(updated)}</span></span>
+        )}
+        {npm.homepage && (
+          <a
+            href={npm.homepage}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#0070f3] hover:underline"
+          >
+            homepage ↗
+          </a>
+        )}
+      </div>
+    </div>
   )
 }

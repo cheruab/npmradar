@@ -28,14 +28,14 @@ export default function GithubStats({ github }) {
         <p className="text-[12px] text-[#555] uppercase tracking-widest font-mono">
           GitHub
         </p>
-        
+        <a
           href={github.html_url}
           target="_blank"
           rel="noopener noreferrer"
           className="text-[11px] text-[#0070f3] font-mono hover:underline"
-        
+        >
           {github.full_name} ↗
-        
+        </a>
       </div>
 
       <div className="grid grid-cols-3 gap-4">
@@ -49,4 +49,5 @@ export default function GithubStats({ github }) {
         <span className="text-[#888]">{timeAgo(github.pushed_at)}</span>
       </p>
     </Card>
-  )}
+  )
+}
