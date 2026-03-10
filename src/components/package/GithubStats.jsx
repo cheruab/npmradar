@@ -1,12 +1,14 @@
 import { formatDownloads, timeAgo } from '../../utils/formatters'
 import Card from '../ui/Card'
 
-const Stat = ({ label, value }) => (
-  <div>
-    <p className="text-[#555] text-[11px] font-mono uppercase tracking-widest mb-1">
+const Stat = ({ label, value, accent }) => (
+  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+    <p style={{ fontSize: '10px', fontFamily: 'monospace', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.12em' }}>
       {label}
     </p>
-    <p className="text-[#ededed] text-[15px] font-medium">{value}</p>
+    <p style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '-0.03em', color: accent ?? '#fff' }}>
+      {value}
+    </p>
   </div>
 )
 
@@ -14,40 +16,50 @@ export default function GithubStats({ github }) {
   if (!github) {
     return (
       <Card>
-        <p className="text-[12px] text-[#555] uppercase tracking-widest font-mono mb-3">
+        <p style={{ fontSize: '10px', fontFamily: 'monospace', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '12px' }}>
           GitHub
         </p>
-        <p className="text-[#555] text-[13px]">No repository linked.</p>
+        <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.2)' }}>No repository linked.</p>
       </Card>
     )
   }
 
   return (
     <Card>
-      <div className="flex items-center justify-between mb-4">
-        <p className="text-[12px] text-[#555] uppercase tracking-widest font-mono">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+        <p style={{ fontSize: '10px', fontFamily: 'monospace', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.15em' }}>
           GitHub
         </p>
-        <a
-          href={github.html_url}
+        
+        <a  href={github.html_url}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-[11px] text-[#0070f3] font-mono hover:underline"
+          style={{ fontSize: '11px', fontFamily: 'monospace', color: '#60a5fa', textDecoration: 'none' }}
+          onMouseOver={e => e.currentTarget.style.textDecoration = 'underline'}
+          onMouseOut={e => e.currentTarget.style.textDecoration = 'none'}
         >
           {github.full_name} ↗
         </a>
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
-        <Stat label="Stars"  value={formatDownloads(github.stargazers_count)} />
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '16px', marginBottom: '16px' }}>
+        <Stat label="Stars"  value={formatDownloads(github.stargazers_count)} accent="#facc15" />
         <Stat label="Issues" value={formatDownloads(github.open_issues_count)} />
         <Stat label="Forks"  value={formatDownloads(github.forks_count)} />
       </div>
 
-      <p className="mt-4 text-[#555] text-[11px] font-mono">
-        last commit{' '}
-        <span className="text-[#888]">{timeAgo(github.pushed_at)}</span>
-      </p>
+      <div style={{ paddingTop: '14px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+        <p style={{ fontSize: '11px', fontFamily: 'monospace', color: 'rgba(255,255,255,0.2)' }}>
+          last commit{' '}
+          <span style={{ color: 'rgba(255,255,255,0.45)' }}>{timeAgo(github.pushed_at)}</span>
+          {github.language && (
+            <span style={{ marginLeft: '16px' }}>
+              lang{' '}
+              <span style={{ color: 'rgba(255,255,255,0.45)' }}>{github.language}</span>
+            </span>
+          )}
+        </p>
+      </div>
     </Card>
   )
 }

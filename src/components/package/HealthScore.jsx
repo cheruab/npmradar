@@ -2,100 +2,95 @@ import Card from '../ui/Card'
 import { scoreToPercent } from '../../utils/formatters'
 
 const colorMap = {
-  green:  { ring: '#22c55e', text: 'text-[#22c55e]', label: 'Healthy' },
-  yellow: { ring: '#eab308', text: 'text-[#eab308]', label: 'Aging'   },
-  red:    { ring: '#ef4444', text: 'text-[#ef4444]', label: 'Risky'   },
+  green:  { stroke: '#4ade80', text: '#4ade80', glow: 'rgba(74,222,128,0.15)'  },
+  yellow: { stroke: '#facc15', text: '#facc15', glow: 'rgba(250,204,21,0.15)'  },
+  red:    { stroke: '#f87171', text: '#f87171', glow: 'rgba(248,113,113,0.15)' },
 }
 
 const ScoreRing = ({ score, color }) => {
-  const r        = 28
-  const circ     = 2 * Math.PI * r
-  const progress = circ - (score / 100) * circ
+  const r    = 30
+  const circ = 2 * Math.PI * r
+  const dash = circ - (score / 100) * circ
+  const c    = colorMap[color]
 
   return (
-    <svg width="72" height="72" viewBox="0 0 72 72">
+    <svg width="80" height="80" viewBox="0 0 80 80">
+      <circle cx="40" cy="40" r={r} fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="4" />
       <circle
-        cx="36" cy="36" r={r}
+        cx="40" cy="40" r={r}
         fill="none"
-        stroke="#1a1a1a"
-        strokeWidth="4"
-      />
-      <circle
-        cx="36" cy="36" r={r}
-        fill="none"
-        stroke={colorMap[color].ring}
+        stroke={c.stroke}
         strokeWidth="4"
         strokeDasharray={circ}
-        strokeDashoffset={progress}
+        strokeDashoffset={dash}
         strokeLinecap="round"
-        transform="rotate(-90 36 36)"
-        style={{ transition: 'stroke-dashoffset 0.6s ease' }}
+        transform="rotate(-90 40 40)"
+        style={{
+          transition: 'stroke-dashoffset 0.8s cubic-bezier(0.4,0,0.2,1)',
+          filter: `drop-shadow(0 0 6px ${c.glow})`,
+        }}
       />
-      <text
-        x="36" y="41"
-        textAnchor="middle"
-        fill="#ededed"
-        fontSize="14"
-        fontWeight="600"
-        fontFamily="inherit"
-      >
+      <text x="40" y="45" textAnchor="middle" fill="#fff" fontSize="15" fontWeight="700" fontFamily="inherit">
         {score}
       </text>
     </svg>
   )
 }
 
+const Bar = ({ label, val }) => (
+  <div>
+    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+      <span style={{ fontSize: '10px', fontFamily: 'monospace', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+        {label}
+      </span>
+      <span style={{ fontSize: '10px', fontFamily: 'monospace', color: 'rgba(255,255,255,0.5)' }}>
+        {scoreToPercent(val)}
+      </span>
+    </div>
+    <div style={{ height: '2px', background: 'rgba(255,255,255,0.06)', borderRadius: '99px', overflow: 'hidden' }}>
+      <div style={{
+        height: '100%', width: `${scoreToPercent(val)}%`,
+        background: 'linear-gradient(90deg, #0070f3, #60a5fa)',
+        borderRadius: '99px',
+        transition: 'width 0.6s cubic-bezier(0.4,0,0.2,1)',
+      }} />
+    </div>
+  </div>
+)
+
 export default function HealthScore({ health, npms }) {
-  const { score, flags, color } = health
+  const { score, flags, color, label } = health
   const detail = npms?.score?.detail
+  const c = colorMap[color]
 
   return (
     <Card>
-      <p className="text-[12px] text-[#555] uppercase tracking-widest font-mono mb-4">
+      <p style={{ fontSize: '10px', fontFamily: 'monospace', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '16px' }}>
         Health Score
       </p>
 
-      <div className="flex items-center gap-5 mb-4">
+      <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
         <ScoreRing score={score} color={color} />
         <div>
-          <p className={`text-[18px] font-semibold ${colorMap[color].text}`}>
-            {colorMap[color].label}
+          <p style={{ fontSize: '18px', fontWeight: 700, color: c.text, letterSpacing: '-0.02em' }}>{label}</p>
+          <p style={{ fontSize: '11px', fontFamily: 'monospace', color: 'rgba(255,255,255,0.25)', marginTop: '2px' }}>
+            {score} / 100
           </p>
-          <p className="text-[#555] text-[12px] font-mono mt-0.5">{score} / 100</p>
         </div>
       </div>
 
       {detail && (
-        <div className="grid grid-cols-3 gap-3 mb-4">
-          {[
-            { label: 'Quality',     val: detail.quality },
-            { label: 'Popularity',  val: detail.popularity },
-            { label: 'Maintenance', val: detail.maintenance },
-          ].map(({ label, val }) => (
-            <div key={label}>
-              <div className="flex justify-between mb-1">
-                <span className="text-[#555] text-[10px] font-mono uppercase tracking-wide">
-                  {label}
-                </span>
-                <span className="text-[#888] text-[10px] font-mono">
-                  {scoreToPercent(val)}
-                </span>
-              </div>
-              <div className="h-[3px] bg-[#1a1a1a] rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-[#0070f3] rounded-full transition-all duration-500"
-                  style={{ width: `${scoreToPercent(val)}%` }}
-                />
-              </div>
-            </div>
-          ))}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: flags.length ? '16px' : 0 }}>
+          <Bar label="Quality"     val={detail.quality} />
+          <Bar label="Popularity"  val={detail.popularity} />
+          <Bar label="Maintenance" val={detail.maintenance} />
         </div>
       )}
 
       {flags.length > 0 && (
-        <div className="flex flex-col gap-1.5">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
           {flags.map((flag) => (
-            <p key={flag} className="text-[#ef4444] text-[11px] font-mono">
+            <p key={flag} style={{ fontSize: '11px', fontFamily: 'monospace', color: 'rgba(248,113,113,0.8)' }}>
               ⚠ {flag}
             </p>
           ))}

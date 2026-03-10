@@ -3,33 +3,12 @@
 @theme {
   --font-family-sans: 'Geist', system-ui, sans-serif;
   --font-family-mono: 'Geist Mono', 'Fira Code', monospace;
-
-  --color-bg:          #000000;
-  --color-bg-1:        #0a0a0a;
-  --color-bg-2:        #111111;
-  --color-bg-3:        #1a1a1a;
-
-  --color-border:      #222222;
-  --color-border-2:    #2a2a2a;
-
-  --color-txt:         #ededed;
-  --color-txt-2:       #888888;
-  --color-txt-3:       #555555;
-
-  --color-accent:      #0070f3;
-  --color-accent-h:    #0060d3;
-
-  --color-success:     #22c55e;
-  --color-warning:     #eab308;
-  --color-danger:      #ef4444;
-
-  --radius:            6px;
 }
 
-* {
+*, *::before, *::after {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
 html {
@@ -39,17 +18,25 @@ html {
 }
 
 body {
-  background: var(--color-bg);
-  color: var(--color-txt);
-  font-family: var(--font-family-sans);
+  background-color: #080808;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.035) 1px, transparent 1px);
+  background-size: 24px 24px;
+  color: #ededed;
+  font-family: 'Geist', system-ui, sans-serif;
   line-height: 1.5;
+  min-height: 100vh;
 }
 
 ::selection {
-  background: var(--color-accent);
+  background: #0070f3;
   color: #fff;
 }
 
-::-webkit-scrollbar       { width: 5px; }
+::-webkit-scrollbar       { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--color-border-2); border-radius: 99px; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 99px; }
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

@@ -1,47 +1,127 @@
 import { useNavigate } from 'react-router-dom'
 import SearchBar from '../components/package/SearchBar'
 
+const SUGGESTIONS = ['react', 'lodash', 'axios', 'next', 'typescript', 'tailwindcss']
+
 export default function Home() {
   const navigate = useNavigate()
 
   return (
-    <div style={{ minHeight: '100vh', background: '#000', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden' }}>
 
-      <header style={{ height: '56px', borderBottom: '1px solid #111', display: 'flex', alignItems: 'center', padding: '0 24px' }}>
-        <span style={{ color: '#ededed', fontSize: '14px', fontWeight: 600, letterSpacing: '-0.01em' }}>
+      {/* Ambient glow — exactly like better-auth */}
+      <div style={{
+        position: 'fixed',
+        top: '20%', left: '50%',
+        transform: 'translateX(-50%)',
+        width: '600px', height: '600px',
+        background: 'radial-gradient(circle, rgba(0,112,243,0.08) 0%, transparent 70%)',
+        pointerEvents: 'none', zIndex: 0,
+      }} />
+
+      {/* Nav */}
+      <header style={{
+        position: 'relative', zIndex: 10,
+        height: '60px',
+        borderBottom: '1px solid rgba(255,255,255,0.06)',
+        display: 'flex', alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '0 32px',
+        background: 'rgba(8,8,8,0.8)',
+        backdropFilter: 'blur(12px)',
+      }}>
+        <span style={{ fontSize: '15px', fontWeight: 600, letterSpacing: '-0.02em', color: '#fff' }}>
           npm<span style={{ color: '#0070f3' }}>radar</span>
         </span>
+        
+         <a href="https://github.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            fontSize: '12px', fontFamily: 'monospace',
+            color: 'rgba(255,255,255,0.3)',
+            textDecoration: 'none',
+            padding: '6px 12px',
+            border: '1px solid rgba(255,255,255,0.08)',
+            borderRadius: '8px',
+            transition: 'all 0.2s',
+          }}
+          onMouseOver={e => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)' }}
+          onMouseOut={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.3)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
+        >
+          GitHub ↗
+        </a>
       </header>
 
-      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '0 16px 96px' }}>
-        <div style={{ width: '100%', maxWidth: '480px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '32px' }}>
+      {/* Hero */}
+      <main style={{
+        flex: 1, position: 'relative', zIndex: 1,
+        display: 'flex', flexDirection: 'column',
+        alignItems: 'center', justifyContent: 'center',
+        padding: '0 24px 80px',
+      }}>
+        <div style={{ width: '100%', maxWidth: '520px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '32px' }}>
 
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', textAlign: 'center' }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '4px 12px', background: '#0a1628', border: '1px solid #1e3a5f', borderRadius: '999px' }}>
-              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#0070f3', animation: 'pulse 2s infinite' }} />
-              <span style={{ color: '#0070f3', fontSize: '11px', fontFamily: 'monospace', letterSpacing: '0.05em' }}>
-                5 live data sources
-              </span>
-            </div>
+          {/* Badge */}
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: '8px',
+            padding: '5px 14px',
+            background: 'rgba(0,112,243,0.08)',
+            border: '1px solid rgba(0,112,243,0.2)',
+            borderRadius: '999px',
+          }}>
+            <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#0070f3', boxShadow: '0 0 6px #0070f3' }} />
+            <span style={{ fontSize: '11px', fontFamily: 'monospace', color: 'rgba(96,165,250,0.9)', letterSpacing: '0.05em' }}>
+              npm · bundlephobia · npms.io · github
+            </span>
+          </div>
 
-            <h1 style={{ fontSize: '32px', fontWeight: 600, color: '#ededed', letterSpacing: '-0.02em', lineHeight: 1.2 }}>
+          {/* Headline */}
+          <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <h1 style={{
+              fontSize: 'clamp(28px, 5vw, 42px)',
+              fontWeight: 700,
+              letterSpacing: '-0.04em',
+              lineHeight: 1.1,
+              color: '#fff',
+            }}>
               Inspect any npm package
             </h1>
-            <p style={{ color: '#555', fontSize: '14px', maxWidth: '320px', lineHeight: 1.6 }}>
-              Bundle size, download trends, health score, and GitHub stats — in one place.
+            <p style={{
+              fontSize: '15px',
+              color: 'rgba(255,255,255,0.35)',
+              lineHeight: 1.6,
+              maxWidth: '380px',
+              margin: '0 auto',
+            }}>
+              Bundle size, download trends, health score, and GitHub stats — one URL, instant insight.
             </p>
           </div>
 
-          <SearchBar onSearch={(name) => navigate(`/package/${name}`)} />
+          {/* Search */}
+          <div style={{ width: '100%' }}>
+            <SearchBar onSearch={(name) => navigate(`/package/${name}`)} />
+          </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-            {['react', 'lodash', 'axios', 'next'].map((pkg) => (
+          {/* Quick links */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.2)', fontFamily: 'monospace', marginRight: '4px' }}>try:</span>
+            {SUGGESTIONS.map((pkg) => (
               <button
                 key={pkg}
                 onClick={() => navigate(`/package/${pkg}`)}
-                style={{ background: 'none', border: 'none', color: '#444', fontSize: '11px', fontFamily: 'monospace', cursor: 'pointer', padding: 0 }}
-                onMouseOver={(e) => e.target.style.color = '#888'}
-                onMouseOut={(e) => e.target.style.color = '#444'}
+                style={{
+                  background: 'rgba(255,255,255,0.03)',
+                  border: '1px solid rgba(255,255,255,0.07)',
+                  borderRadius: '6px',
+                  padding: '4px 10px',
+                  fontSize: '11px', fontFamily: 'monospace',
+                  color: 'rgba(255,255,255,0.35)',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s',
+                }}
+                onMouseOver={e => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'; e.currentTarget.style.background = 'rgba(255,255,255,0.06)' }}
+                onMouseOut={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.35)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'; e.currentTarget.style.background = 'rgba(255,255,255,0.03)' }}
               >
                 {pkg}
               </button>
@@ -50,12 +130,17 @@ export default function Home() {
         </div>
       </main>
 
-      <footer style={{ height: '48px', borderTop: '1px solid #111', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <p style={{ color: '#333', fontSize: '11px', fontFamily: 'monospace' }}>
-          built with npm · bundlephobia · npms.io · github api
+      {/* Footer */}
+      <footer style={{
+        position: 'relative', zIndex: 1,
+        borderTop: '1px solid rgba(255,255,255,0.05)',
+        padding: '16px 32px',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+      }}>
+        <p style={{ fontSize: '11px', fontFamily: 'monospace', color: 'rgba(255,255,255,0.15)' }}>
+          npmradar — open source · built for developers
         </p>
       </footer>
-
     </div>
   )
 }

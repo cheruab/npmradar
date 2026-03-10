@@ -1,9 +1,15 @@
 export default function ErrorMessage({ message }) {
   if (!message) return null
   return (
-    <div className="flex items-start gap-3 px-4 py-3 bg-[#1a0a0a] border border-[#3f1111] rounded-[6px]">
-      <span className="text-[#ef4444] text-[13px] mt-px">✕</span>
-      <p className="text-[#ef4444] text-[13px]">{message}</p>
+    <div style={{
+      display: 'flex', alignItems: 'flex-start', gap: '10px',
+      padding: '14px 16px',
+      background: 'rgba(239,68,68,0.06)',
+      border: '1px solid rgba(239,68,68,0.2)',
+      borderRadius: '10px',
+    }}>
+      <span style={{ color: '#f87171', fontSize: '13px', marginTop: '1px', flexShrink: 0 }}>✕</span>
+      <p style={{ color: '#f87171', fontSize: '13px', lineHeight: 1.5 }}>{message}</p>
     </div>
   )
 }

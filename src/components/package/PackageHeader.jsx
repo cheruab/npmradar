@@ -2,37 +2,49 @@ import { timeAgo } from '../../utils/formatters'
 import Badge from '../ui/Badge'
 
 export default function PackageHeader({ npm }) {
-  const latest  = npm['dist-tags']?.latest
-  const updated = npm.time?.modified
-  const license = npm.versions?.[latest]?.license || npm.license || 'Unknown'
+  const latest  = npm['dist-tags']?.latest ?? npm.version
+  const updated = npm.time?.modified ?? npm.gitHead
+  const license = npm.license || 'Unknown'
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex items-center gap-3 flex-wrap">
-        <h1 className="text-[22px] font-semibold text-[#ededed] tracking-tight">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+        <h1 style={{
+          fontSize: '22px', fontWeight: 700,
+          letterSpacing: '-0.03em', color: '#fff',
+        }}>
           {npm.name}
         </h1>
-        <Badge label={`v${latest}`} variant="blue" />
-        <Badge label={license}      variant="gray" />
+        {latest  && <Badge label={`v${latest}`}  variant="blue" />}
+        {license && <Badge label={license}        variant="gray" />}
       </div>
 
-      <p className="text-[#888] text-[13px] leading-relaxed max-w-2xl">
+      <p style={{
+        fontSize: '14px', color: 'rgba(255,255,255,0.4)',
+        lineHeight: 1.65, maxWidth: '640px',
+      }}>
         {npm.description || 'No description provided.'}
       </p>
 
-      <div className="flex items-center gap-4 text-[12px] text-[#555] font-mono flex-wrap">
+      <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
         {npm.author?.name && (
-          <span>by <span className="text-[#888]">{npm.author.name}</span></span>
+          <span style={{ fontSize: '12px', fontFamily: 'monospace', color: 'rgba(255,255,255,0.25)' }}>
+            by <span style={{ color: 'rgba(255,255,255,0.5)' }}>{npm.author.name}</span>
+          </span>
         )}
         {updated && (
-          <span>updated <span className="text-[#888]">{timeAgo(updated)}</span></span>
+          <span style={{ fontSize: '12px', fontFamily: 'monospace', color: 'rgba(255,255,255,0.25)' }}>
+            updated <span style={{ color: 'rgba(255,255,255,0.5)' }}>{timeAgo(updated)}</span>
+          </span>
         )}
         {npm.homepage && (
-          <a
-            href={npm.homepage}
+          
+           <a href={npm.homepage}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[#0070f3] hover:underline"
+            style={{ fontSize: '12px', fontFamily: 'monospace', color: '#60a5fa', textDecoration: 'none' }}
+            onMouseOver={e => e.currentTarget.style.textDecoration = 'underline'}
+            onMouseOut={e => e.currentTarget.style.textDecoration = 'none'}
           >
             homepage ↗
           </a>

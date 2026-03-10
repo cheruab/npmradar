@@ -1,14 +1,13 @@
-import { formatBytes } from '../../utils/formatters'
 import Card from '../ui/Card'
 
 export default function BundleSize({ bundle }) {
   if (!bundle) {
     return (
       <Card>
-        <p className="text-[12px] text-[#555] uppercase tracking-widest font-mono mb-3">
+        <p style={{ fontSize: '10px', fontFamily: 'monospace', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '12px' }}>
           Bundle Size
         </p>
-        <p className="text-[#555] text-[13px]">Not available for this package.</p>
+        <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.2)' }}>Not available for this package.</p>
       </Card>
     )
   }
@@ -16,30 +15,41 @@ export default function BundleSize({ bundle }) {
   const sizeKb  = (bundle.size / 1024).toFixed(1)
   const gzipKb  = (bundle.gzip / 1024).toFixed(1)
   const warning = bundle.size > 500 * 1024
+  const pct     = Math.min(100, (bundle.size / (500 * 1024)) * 100)
 
   return (
     <Card>
-      <p className="text-[12px] text-[#555] uppercase tracking-widest font-mono mb-4">
+      <p style={{ fontSize: '10px', fontFamily: 'monospace', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '16px' }}>
         Bundle Size
       </p>
 
-      <div className="flex items-end gap-1 mb-1">
-        <span className={`text-[28px] font-semibold tracking-tight ${warning ? 'text-[#ef4444]' : 'text-[#ededed]'}`}>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginBottom: '4px' }}>
+        <span style={{ fontSize: '32px', fontWeight: 700, letterSpacing: '-0.04em', color: warning ? '#f87171' : '#fff', fontFamily: 'monospace' }}>
           {sizeKb}
         </span>
-        <span className="text-[#555] text-[13px] mb-1 font-mono">kB</span>
-        <span className="text-[#555] text-[13px] mb-1 ml-2 font-mono">minified</span>
+        <span style={{ fontSize: '13px', color: 'rgba(255,255,255,0.3)', fontFamily: 'monospace' }}>kB</span>
+        <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.2)', fontFamily: 'monospace', marginLeft: '4px' }}>minified</span>
       </div>
 
-      <p className="text-[#888] text-[12px] font-mono">
-        {gzipKb} kB <span className="text-[#555]">gzipped</span>
+      <p style={{ fontSize: '12px', fontFamily: 'monospace', color: 'rgba(255,255,255,0.3)', marginBottom: '16px' }}>
+        {gzipKb} kB <span style={{ color: 'rgba(255,255,255,0.15)' }}>gzipped</span>
       </p>
 
-      {warning && (
-        <p className="mt-3 text-[#ef4444] text-[11px] font-mono">
-          ⚠ Large bundle — consider a lighter alternative
-        </p>
-      )}
+      {/* Size bar */}
+      <div style={{ height: '2px', background: 'rgba(255,255,255,0.06)', borderRadius: '99px', overflow: 'hidden' }}>
+        <div style={{
+          height: '100%',
+          width: `${pct}%`,
+          background: warning
+            ? 'linear-gradient(90deg, #f87171, #ef4444)'
+            : 'linear-gradient(90deg, #4ade80, #22c55e)',
+          borderRadius: '99px',
+          transition: 'width 0.6s ease',
+        }} />
+      </div>
+      <p style={{ marginTop: '6px', fontSize: '10px', fontFamily: 'monospace', color: 'rgba(255,255,255,0.15)' }}>
+        {warning ? '⚠ exceeds 500kB threshold' : `${(100 - pct).toFixed(0)}% under 500kB limit`}
+      </p>
     </Card>
   )
 }
