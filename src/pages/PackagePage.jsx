@@ -63,7 +63,7 @@ export default function PackagePage() {
       }}>
         <Link
           to="/"
-          style={{ fontSize: '15px', fontWeight: 600, letterSpacing: '-0.02em', color: '#fff', textDecoration: 'none', flexShrink: 0 }}
+          style={{ fontSize: '25px', fontWeight: 600, letterSpacing: '-0.02em', color: '#fff', textDecoration: 'none', flexShrink: 0 }}
         >
           npm<span style={{ color: '#0070f3' }}>radar</span>
         </Link>

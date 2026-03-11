@@ -56,7 +56,7 @@ export default function ComparePage() {
         padding: '0 24px',
         gap: '12px',
       }}>
-        <Link to="/" style={{ color: '#ededed', fontSize: '14px', fontWeight: 600, textDecoration: 'none' }}>
+        <Link to="/" style={{ color: '#ededed', fontSize: '25px', fontWeight: 600, textDecoration: 'none' }}>
           npm<span style={{ color: '#0070f3' }}>radar</span>
         </Link>
         <span style={{ color: '#333', fontFamily: 'monospace' }}>/</span>

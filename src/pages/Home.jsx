@@ -30,7 +30,7 @@ export default function Home() {
         background: 'rgba(8,8,8,0.8)',
         backdropFilter: 'blur(12px)',
       }}>
-        <span style={{ fontSize: '15px', fontWeight: 600, letterSpacing: '-0.02em', color: '#fff' }}>
+        <span style={{ fontSize: '25px', fontWeight: 600, letterSpacing: '-0.02em', color: '#fff' }}>
           npm<span style={{ color: '#0070f3' }}>radar</span>
         </span>
         
